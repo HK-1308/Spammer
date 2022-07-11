@@ -10,6 +10,7 @@ namespace TestTask.Services
             {
                 return await apiRequest.Request(param);
             }
+
             return "Bad request";
         }
     }
