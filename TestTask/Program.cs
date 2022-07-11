@@ -72,12 +72,6 @@ builder.Services.AddDbContext<DataContext>(x =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
 
 app.Use(async (context, next) =>
 {
