@@ -59,8 +59,6 @@ builder.Services.AddScoped<JwtHandler>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 
 var app = builder.Build();
 
@@ -70,16 +68,16 @@ app.Use(async (context, next) =>
     await next();
     if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
     {
-        context.Request.Path = "index/html";
+        context.Request.Path = "/index/html";
         await next();
     }
 });
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
 app.UseHttpsRedirection();
 app.UseDefaultFiles();
 app.UseStaticFiles();
