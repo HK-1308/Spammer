@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using TestTask.Models;
 using TestTask.Services.Interfaces;
 
 namespace TestTask.Data.Services
@@ -18,7 +17,7 @@ namespace TestTask.Data.Services
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    await Task.Delay(60000);
+                    await Task.Delay(30000);
                     await DoWork();
                 }
             }, cancellationToken);

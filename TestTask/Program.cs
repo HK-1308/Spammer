@@ -1,8 +1,8 @@
 using TestTask;
-using Microsoft.EntityFrameworkCore;
+
 using TestTask.Data.Interfaces;
 using TestTask.Data.Repositories;
-using TestTask.Models;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -24,8 +24,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IJobsRepository, JobsRepository>();
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<DataContext>();
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
 builder.Services.AddSingleton<RequestExecuter>();
@@ -60,14 +58,7 @@ builder.Services.AddScoped<JwtHandler>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-
-
-builder.Services.AddDbContext<DataContext>(x =>
-{
-    x.UseSqlite(connectionString);
-});
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
 var app = builder.Build();
@@ -83,6 +74,11 @@ app.Use(async (context, next) =>
     }
 });
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 app.UseHttpsRedirection();
 app.UseDefaultFiles();
 app.UseStaticFiles();

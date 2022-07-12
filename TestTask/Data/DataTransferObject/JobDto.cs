@@ -15,6 +15,9 @@ namespace TestTask.Data.DataTransferObject
         public int Period { get; set; }
 
         [Required]
+        public string PeriodFormat { get; set; }
+
+        [Required]
         public DateTime StartDate { get; set; }
 
         [Required]

@@ -1,15 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using TestTask.Data.Interfaces;
-using TestTask.Models;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
-using AutoMapper;
 using TestTask.Data.DataTransferObject;
-using Microsoft.AspNetCore.Authorization;
 using TestTask.JwtFeatures;
 using System.IdentityModel.Tokens.Jwt;
+using TestTask.Data.Models;
 
 namespace TestTask.Controllers
 {
@@ -17,15 +11,13 @@ namespace TestTask.Controllers
     [Route("[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly UserManager<User> userManager;
-        private readonly IMapper mapper;
         private readonly JwtHandler jwtHandler;
+        private readonly IUserRepository userRepository;
 
-        public AuthenticationController(UserManager<User> userManager, IMapper mapper, JwtHandler jwtHandler)
+        public AuthenticationController(JwtHandler jwtHandler, IUserRepository userRepository)
         {
-            this.userManager = userManager;
-            this.mapper = mapper;
             this.jwtHandler = jwtHandler;
+            this.userRepository = userRepository;   
         }
 
         [HttpPost ("registration")]
@@ -34,15 +26,14 @@ namespace TestTask.Controllers
             if (userForRegistration == null || !ModelState.IsValid)
                 return BadRequest();
 
-            var user = mapper.Map<User>(userForRegistration);
-            var result = await userManager.CreateAsync(user, userForRegistration.Password);
-            if (!result.Succeeded)
+            User user = new User() {Email = userForRegistration.Email, Password = userForRegistration.Password };
+            var result = await userRepository.CreateUser(user);
+            if (!result)
             {
-                var errors = result.Errors.Select(e => e.Description);
-
+                List<string> errors = new List<string>();
+                errors.Add("Error with registration");
                 return BadRequest(new RegistrationResponseDto { Errors = errors });
             }
-            await userManager.AddToRoleAsync(user, "User");
             return StatusCode(201);
         }
 
@@ -50,8 +41,8 @@ namespace TestTask.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthentication)
         {
-            var user = await userManager.FindByNameAsync(userForAuthentication.Email);
-            if (user == null || !await userManager.CheckPasswordAsync(user, userForAuthentication.Password))
+            var user = await userRepository.GetUserForLogin(userForAuthentication.Email, userForAuthentication.Password);
+            if (user == null)
                 return Unauthorized(new AuthResponseDto { ErrorMessage = "Invalid Authentication" });
             var signingCredentials = jwtHandler.GetSigningCredentials();
             var claims = await jwtHandler.GetClaims(user);

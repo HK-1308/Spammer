@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TestTask.Data.DataTransferObject;
 using TestTask.Data.Interfaces;
 using TestTask.Data.Models;
-using TestTask.Data.Services;
-using TestTask.Models;
 
 namespace TestTask.Controllers
 {
@@ -18,12 +15,12 @@ namespace TestTask.Controllers
 
         private readonly IMapper mapper;
         private readonly IJobsRepository jobsRepository;
-        private readonly UserManager<User> userManager;
-        public JobsController( IJobsRepository jobsRepository, IMapper mapper, UserManager<User> userManager)
+        private readonly IUserRepository userRepository;
+        public JobsController( IUserRepository userRepository,IJobsRepository jobsRepository, IMapper mapper)
         {
+            this.userRepository = userRepository;
             this.jobsRepository = jobsRepository;
             this.mapper = mapper;
-            this.userManager = userManager; 
         }
 
         [HttpPost("AddJob")]
@@ -33,10 +30,8 @@ namespace TestTask.Controllers
                 return BadRequest();
             var job = mapper.Map<Job>(jobDto);
             job.Id = Guid.NewGuid().ToString();
-            job.UserEmail = HttpContext.User.Identity?.Name;
-            var user = await userManager.FindByEmailAsync(job.UserEmail);
-            job.User = user;
-            job.UserId = user.Id;
+            job.UserEmail = HttpContext.User.Identity?.Name;          
+            job.UserId = await userRepository.GetUserIdByEmail(job.UserEmail);
             await jobsRepository.AddJob(job);
             return StatusCode(201);
         }
@@ -44,8 +39,7 @@ namespace TestTask.Controllers
         [HttpDelete("RemoveJob/{id}")]
         public async Task<IActionResult> RemoveJob([FromRoute] string id)
         {
-            var job = await jobsRepository.GetJobAsync(id);
-            await jobsRepository.RemoveJob(job);
+            await jobsRepository.RemoveJob(id);
             return StatusCode(201);
         }
 
@@ -54,22 +48,8 @@ namespace TestTask.Controllers
         {
             if (jobDto == null || !ModelState.IsValid)
                 return BadRequest();
-            var job = await jobsRepository.GetJobAsync(jobDto.Id);
-            job.Name = jobDto.Name;
-            job.Description = jobDto.Description;
-            job.Period = jobDto.Period;
-            job.NextExecutionDate = jobDto.NextExecutionDate;
-            job.ApiUrlForJob = jobDto.ApiUrlForJob;
-            job.Params = jobDto.Params;
-            await jobsRepository.UpdateJob(job);
+            await jobsRepository.UpdateJob(jobDto);
             return StatusCode(201);
-        }
-
-        [HttpGet("GetAllJobs")]
-        public async Task<IActionResult> GetAllJobs()
-        {
-            var jobsList = await jobsRepository.GetAllJobsAsync();
-            return Ok(jobsList);
         }
 
         [HttpGet("GetUsersJobs")]

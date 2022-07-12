@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
-using TestTask.Data.Models;
-
-namespace TestTask.Models
+﻿namespace TestTask.Data.Models
 {
-    public class User: IdentityUser
+    public class User
     {
-        public string? FirstName { get; set; }
+        public string Id { get; set; }
 
+        public string Email { get; set; }
+
+        public string Password { get; set; }
 
         public User()
         {

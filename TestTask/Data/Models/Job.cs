@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TestTask.Models;
+
 
 namespace TestTask.Data.Models
 {
@@ -16,6 +16,8 @@ namespace TestTask.Data.Models
         public DateTime? NextExecutionDate { get; set; }
 
         public int Period { get; set; } 
+
+        public string PeriodFormat { get; set; }
 
         public string ApiUrlForJob { get; set; }
 

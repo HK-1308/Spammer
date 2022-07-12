@@ -23,21 +23,29 @@ namespace TestTask.Data.Services
         }
         public async Task DoWork()
         {
-          var jobs = await jobsRepository.GetExpiredJobs();
+            var jobs = await jobsRepository.GetExpiredJobs();
+            jobs = jobs.Where(job => job.NextExecutionDate <= DateTime.Now).ToList();
 
-            Parallel.ForEach(jobs, new ParallelOptions { MaxDegreeOfParallelism = 10 }, async job => 
+            Parallel.ForEach(jobs, new ParallelOptions { MaxDegreeOfParallelism = 10 }, async job =>
             {
-                job.NextExecutionDate = DateTime.Now.AddHours(job.Period);
+                switch (job.PeriodFormat)
+                {
+                    case "Minutes": job.NextExecutionDate = DateTime.Now.AddMinutes(job.Period); break;
+                    case "Hours": job.NextExecutionDate = DateTime.Now.AddHours(job.Period); break;
+                    case "Days": job.NextExecutionDate = DateTime.Now.AddDays(job.Period); break;
+                    case "Month": job.NextExecutionDate = DateTime.Now.AddMonths(job.Period); break;
+
+                }
                 job.NextExecutionDate = new DateTime(job.NextExecutionDate.Value.Year, job.NextExecutionDate.Value.Month,
                     job.NextExecutionDate.Value.Day, job.NextExecutionDate.Value.Hour, job.NextExecutionDate.Value.Minute, 0);
                 job.LastExecutionDate = DateTime.Now;
                 job.LastExecutionDate = new DateTime(job.LastExecutionDate.Value.Year, job.LastExecutionDate.Value.Month,
                     job.LastExecutionDate.Value.Day, job.LastExecutionDate.Value.Hour, job.LastExecutionDate.Value.Minute, 0);
+
                 lock (locker)
                 {
-                     jobsRepository.UpdateJob(job);
+                    jobsRepository.UpdateJob(job);
                 }
-
                 string csvString = "";
                 bool isBadRequest = true;
                 if (job.ApiUrlForJob == "WeatherApi")
