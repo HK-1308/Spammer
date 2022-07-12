@@ -1,0 +1,66 @@
+<div class="container my-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    name
+                </th>
+                <th>
+                    description
+                </th>
+                <th>
+                    period
+                </th>
+                <th>
+                    period format
+                </th>
+                <th>
+                    last execution
+                </th>
+                <th>
+                    next execution
+                </th>
+                <th>
+                    API
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+    
+        </thead>
+        <tbody>
+            <tr *ngFor="let job of usersJobs ">
+                <th>
+                    {{job.name}}
+                </th>
+                <th>
+                    {{job.description}}
+                </th>
+                <th>
+                    {{job.period}}
+                </th>
+                <th>
+                    {{job.periodFormat}}
+                </th>
+                <th>
+                    {{job.lastExecutionDate}}
+                </th>
+                <th>
+                    {{job.nextExecutionDate}}
+                </th>
+                <th>
+                    {{job.apiUrlForJob}}
+                </th>
+                <th>
+                    <a class="nav-link"[routerLink]="['editJob']" routerLinkActive="active" 
+                    [routerLinkActiveOptions]="{exact: true}" [queryParams]="{'id': job.id}">Edit</a>
+                </th>
+                <th>
+                    <button class="btn nav-link"  routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="removeJob(job.id)" >Delete</button>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    <a class="nav-link"[routerLink]="['addNewJob']" routerLinkActive="active" 
+    [routerLinkActiveOptions]="{exact: true}">Add new task</a>
+</div>

@@ -1,0 +1,127 @@
+<form [formGroup]="addNewJobForm" autocomplete="off" novalidate (ngSubmit)="addNewJob(addNewJobForm.value)">
+    <div class="mb-3 row">
+        <label for="name" class="col-form-label col-sm-2">Name:</label>
+        <div class="col-md-5">
+            <input type="text" id="name" formControlName="name" class="form-control" />
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('name') && hasError('name', 'required')">Name is required</em>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="description" class="col-form-label col-sm-2">Description:</label>
+        <div class="col-md-5">
+            <input type="text" id="description" formControlName="description" class="form-control" />
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('description') && hasError('description', 'required')">Description is required</em>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="period" class="col-form-label col-sm-2">Period:</label>
+        <div class="col-md-5">
+            <input type="number" id="period" formControlName="period" class="form-control" />
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('period') && hasError('period', 'required')">Period is required</em>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="periodFormat" class="col-form-label col-sm-2">Period Format:</label>
+        <div class="col-md-5">
+            <select type="text" id="periodFormat" formControlName="periodFormat" class="form-select" (change)="selectChange($event)">
+                <option value="Minutes">Minutes</option>
+                <option value="Hours">Hours</option>
+                <option value="Days" >Days</option>
+                <option value="Month">Month</option>
+            </select>
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('periodFormat') && hasError('periodFormat', 'required')">Period Formatis required</em>
+        </div> 
+    </div>
+    <div class="mb-3 row">
+        <label for="startDate" class="col-form-label col-sm-2">Start Date:</label>
+        <div class="col-md-5">
+            <input type="datetime-local" id="startDate" formControlName="startDate" class="form-control" />
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('startDate') && hasError('startDate', 'required')">Start Date is required</em>
+        </div>
+    </div>
+    
+    <div class="mb-3 row">
+        <label for="apiUrlForJob" class="col-form-label col-sm-2">API:</label>
+        <div class="col-md-5">
+            <select type="text" id="apiUrlForJob" formControlName="ApiUrl" class="form-select" (change)="selectChange($event)">
+                <option value="WeatherApi">Weather Forcast</option>
+                <option value="CovidApi">Covid Statistic</option>
+                <option value="NumbersApi" >Facts about numbers</option>
+            </select>
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('ApiUrl') && hasError('ApiUrl', 'required')">API is required</em>
+        </div>        
+    </div>
+
+    <div class="mb-3 row" *ngIf="isWeatherApi()">    
+        <label for="city" class="col-form-label col-sm-2">City:</label>
+        <div class="col-md-5">
+            <input type="text" id="city" formControlName="city" class="form-control" />
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('city') && hasError('city', 'required')">City is required</em>
+        </div>
+    </div>
+
+    <div class="mb-3 row" *ngIf="isCovidApi()">
+        <label for="country" class="col-form-label col-sm-2">Country:</label>
+        <div class="col-md-5">
+            <input type="text" id="country" formControlName="country" class="form-control" />
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('country') && hasError('country', 'required')">Country is required</em>
+        </div>
+    </div>
+
+    <div class="mb-3 row" *ngIf="isNumberApi()">
+        <label for="min" class="col-form-label col-sm-2">Min:</label>
+        <div class="col-md-5">
+            <input type="text" id="min" formControlName="min" class="form-control" />
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('min') && hasError('min', 'required')">Min is required</em>
+        </div>
+    </div>
+
+    <div class="mb-3 row" *ngIf="isNumberApi()">
+        <label for="max" class="col-form-label col-sm-2">Max:</label>
+        <div class="col-md-5">
+            <input type="text" id="max" formControlName="max" class="form-control" />
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('max') && hasError('max', 'required')">Max is required</em>
+        </div>
+    </div>
+
+    <div class="mb-3 row" *ngIf="isNumberApi()">
+        <label for="type" class="col-form-label col-sm-2">Type:</label>
+        <div class="col-md-5">
+            <select type="text" id="type" formControlName="type" class="form-select">
+                <option value="math">Math facts</option>
+                <option value="date">Date facts</option>
+                <option value="year" >Year facts</option>
+                <option value="trivia" >Trivia facts</option>
+            </select>
+        </div>
+        <div class="col-md-5">
+            <em *ngIf="validateControl('type') && hasError('type', 'required')">Type is required</em>
+        </div>
+    </div>
+    <br>
+    <div class="mb-3 row">
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-info" [disabled]="!addNewJobForm.valid || !(isCovidApi() || isNumberApi() || isWeatherApi())">Submit</button>
+        </div>
+    </div>
+</form>

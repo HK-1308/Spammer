@@ -1,0 +1,37 @@
+<div class="container my-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Number Of Tasks
+                </th>
+                <th>
+                    Last Execution Date
+                </th>
+                <th>
+                    Nearest Execution Date
+                </th>
+            </tr>
+    
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users ">
+                <th>
+                    {{user.email}}
+                </th>
+                <th>
+                    {{user.numberOfTasks}}
+                </th>
+                <th>
+                    {{user.lastExecutionDate}}
+                </th>
+                <th>
+                    {{user.nextExecutionDate}}
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</div>
