@@ -164,10 +164,7 @@ namespace TestTask.Data.Repositories
             });
             return user;
         }
-        public async Task<List<UserForAdminTableDto>> GetUsersForAdmin() 
-        {
-            return new List<UserForAdminTableDto>();
-        }
+
 
     }
 }

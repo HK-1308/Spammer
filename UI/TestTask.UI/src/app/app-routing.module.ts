@@ -7,6 +7,8 @@ import { LoginComponent } from './authentication/login/login.component';
 import { RegisterUserComponent } from './authentication/register-user/register-user.component';
 import { EditJobComponent } from './edit-job/edit-job.component';
 import { TasksComponent } from './tasks/tasks.component';
+import { UsageHistoryComponent } from './usage-history/usage-history.component';
+import { UserUsageHistoryComponent } from './user-usage-history/user-usage-history.component';
 
 
 
@@ -26,6 +28,14 @@ const routes: Routes = [
   {
     path: "admin",
     component: AdminComponent
+  },
+  {
+    path: "admin/userUsageHistory",
+    component: UserUsageHistoryComponent
+  },
+  {
+    path: "admin/usageHistory",
+    component: UsageHistoryComponent
   },
   {
     path: "tasks/addNewJob",

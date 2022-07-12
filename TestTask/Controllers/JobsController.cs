@@ -62,7 +62,7 @@ namespace TestTask.Controllers
         }
 
         [HttpGet("GetJob/{id}")]
-        public async Task<IActionResult> GetUsersJobs([FromRoute] string id)
+        public async Task<IActionResult> GetJob([FromRoute] string id)
         {
             var job = await jobsRepository.GetJobAsync(id);
             return Ok(job);

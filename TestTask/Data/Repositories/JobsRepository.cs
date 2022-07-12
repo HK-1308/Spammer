@@ -67,7 +67,7 @@ namespace TestTask.Data.Repositories
                     SqliteCommand command = new SqliteCommand();
                     command.Connection = connection;
                     command.CommandText = $"INSERT INTO Job (Id,Name, Description, NextExecutionDate, Period, ApiUrlForJob, Params, UserId, UserEmail, PeriodFormat) " +
-                                          $"VALUES ('{job.Id}','{job.Name}', '{job.Description}', '{job.NextExecutionDate}', '{job.Period}'," +
+                                          $"VALUES ('{job.Id}','{job.Name}', '{job.Description}', '{job.NextExecutionDate}', {job.Period}," +
                                           $"'{job.ApiUrlForJob}', '{job.Params}', '{job.UserId}', '{job.UserEmail}','{job.PeriodFormat}')";
                     number = command.ExecuteNonQuery();
 

@@ -56,7 +56,7 @@ namespace TestTask.Services
                     try
                     {
                         int idx = ColumnsNameData.IndexOf(":");
-                        string ColumnsNameString = ColumnsNameData.Substring(0, idx).Replace("\"", "").Trim();
+                        string ColumnsNameString = ColumnsNameData.Substring(0, idx).Replace("\"", "").Trim().Trim('\n');
                         if (!ColumnsName.Contains(ColumnsNameString))
                         {
                             ColumnsName.Add(ColumnsNameString);
@@ -82,8 +82,8 @@ namespace TestTask.Services
                     try
                     {
                         int idx = rowData.IndexOf(":");
-                        string RowColumns = rowData.Substring(0, idx).Replace("\"", "").Trim();
-                        string RowDataString = rowData.Substring(idx + 1).Replace("\"", "").Trim();
+                        string RowColumns = rowData.Substring(0, idx).Replace("\"", "").Trim().Trim('\n');
+                        string RowDataString = rowData.Substring(idx + 1).Replace("\"", "").Trim().Trim('\n');
                         nr[RowColumns] = RowDataString;
                     }
                     catch (Exception ex)

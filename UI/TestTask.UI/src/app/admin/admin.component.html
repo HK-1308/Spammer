@@ -14,6 +14,9 @@
                 <th>
                     Nearest Execution Date
                 </th>
+                <th>
+
+                </th>
             </tr>
     
         </thead>
@@ -31,7 +34,13 @@
                 <th>
                     {{user.nextExecutionDate}}
                 </th>
+                <th>
+                    <a class="nav-link"[routerLink]="['userUsageHistory']" routerLinkActive="active" 
+                    [routerLinkActiveOptions]="{exact: true}" [queryParams]="{'email': user.email}">Show usage history</a>
+                </th>
             </tr>
         </tbody>
     </table>
+    <a class="nav-link"[routerLink]="['usageHistory']" routerLinkActive="active" 
+    [routerLinkActiveOptions]="{exact: true}">History</a>
 </div>

@@ -16,6 +16,8 @@ import { AdminComponent } from './admin/admin.component';
 import { AddNewJobComponent } from './add-new-job/add-new-job.component';
 import { EditJobComponent } from './edit-job/edit-job.component';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
+import { UserUsageHistoryComponent } from './user-usage-history/user-usage-history.component';
+import { UsageHistoryComponent } from './usage-history/usage-history.component';
 
 export function tokenGetter() { 
   return localStorage.getItem('token'); 
@@ -31,7 +33,9 @@ export function tokenGetter() {
     AdminComponent,
     AddNewJobComponent,
     EditJobComponent,
-    AccessDeniedComponent
+    AccessDeniedComponent,
+    UserUsageHistoryComponent,
+    UsageHistoryComponent
   ],
   imports: [
     BrowserModule,

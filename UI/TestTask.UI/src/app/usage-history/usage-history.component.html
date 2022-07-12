@@ -1,0 +1,43 @@
+<div class="container my-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Job Name
+                </th>
+                <th>
+                    API
+                </th>
+                <th>
+                    Execution Date
+                </th>
+                <th>
+                    Status
+                </th>
+            </tr>
+    
+        </thead>
+        <tbody>
+            <tr *ngFor="let record of history ">
+                <th>
+                    {{record.email}}
+                </th>
+                <th>
+                    {{record.jobName}}
+                </th>
+                <th>
+                    {{record.apiUrlForJob}}
+                </th>
+                <th>
+                    {{record.lastExecution}}
+                </th>
+                <th>
+                    {{record.status}}
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -12,8 +12,6 @@ namespace TestTask.Data.Interfaces
 
         Task<User> GetUserForLogin(string? email, string? password);
 
-        Task<List<UserForAdminTableDto>> GetUsersForAdmin();
-
         Task<string> GetUserIdByEmail(string email);
 
         Task<string> GetUserRoleId(string id);

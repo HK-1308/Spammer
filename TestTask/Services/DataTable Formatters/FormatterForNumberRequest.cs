@@ -7,7 +7,10 @@ namespace TestTask.Services.DataTable_Formatters
     {
         public DataTable FormatTable(DataTable dataTable)
         {
-            dataTable.Columns.Remove("found");
+            if (dataTable.Columns.Contains("found"))
+            {
+                dataTable.Columns.Remove("found");
+            }
             return dataTable;
         }
     }

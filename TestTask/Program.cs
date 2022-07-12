@@ -24,6 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IJobsRepository, JobsRepository>();
+builder.Services.AddTransient<IAdminStatisticRepository, AdminStatisticRepository>();
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
 builder.Services.AddSingleton<RequestExecuter>();
