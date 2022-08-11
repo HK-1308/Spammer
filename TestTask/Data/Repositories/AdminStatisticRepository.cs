@@ -75,7 +75,12 @@ namespace TestTask.Data.Repositories
                     SqliteCommand command = new SqliteCommand();
                     command.Connection = connection;
                     command.CommandText = $"INSERT INTO AdminStatistic (UserEmail, JobName, ApiUrlForJob, Status, LastExecution)" +
-                    $" VALUES ('{job.UserEmail}','{job.Name}', '{job.ApiUrlForJob}', '{status}', '{job.LastExecutionDate}')";
+                    $" VALUES (@UserEmail, @UserName, @ApiUrlForJob, @Status, @LastExecutionDate)";
+                    command.Parameters.AddWithValue("@UserEmail", job.UserEmail);
+                    command.Parameters.AddWithValue("@UserName", job.Name);
+                    command.Parameters.AddWithValue("@ApiUrlForJob", job.ApiUrlForJob);
+                    command.Parameters.AddWithValue("@Status", status);
+                    command.Parameters.AddWithValue("@LastExecutionDate", job.LastExecutionDate);
                     number = command.ExecuteNonQuery();
 
                 }
@@ -91,12 +96,13 @@ namespace TestTask.Data.Repositories
             List<UserForUsageHistoryDto> users = new List<UserForUsageHistoryDto>();
             await Task.Run(() =>
             {
-                string sqlExpression = $"SELECT * FROM AdminStatistic WHERE UserEmail = '{userEmail}'";
+                string sqlExpression = $"SELECT * FROM AdminStatistic WHERE UserEmail = @UserEmail";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                    command.Parameters.AddWithValue("@UserEmail", userEmail);
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows)

@@ -18,12 +18,13 @@ namespace TestTask.Data.Repositories
             List<Job> jobs = new List<Job>();
             await Task.Run(() =>
             {
-                string sqlExpression = $"SELECT * FROM Job WHERE UserEmail = '{email}'";
+                string sqlExpression = $"SELECT * FROM Job WHERE UserEmail = @UserEmail";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                    command.Parameters.AddWithValue("@UserEmail", email);
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows) 
@@ -67,8 +68,18 @@ namespace TestTask.Data.Repositories
                     SqliteCommand command = new SqliteCommand();
                     command.Connection = connection;
                     command.CommandText = $"INSERT INTO Job (Id,Name, Description, NextExecutionDate, Period, ApiUrlForJob, Params, UserId, UserEmail, PeriodFormat) " +
-                                          $"VALUES ('{job.Id}','{job.Name}', '{job.Description}', '{job.NextExecutionDate}', {job.Period}," +
-                                          $"'{job.ApiUrlForJob}', '{job.Params}', '{job.UserId}', '{job.UserEmail}','{job.PeriodFormat}')";
+                                          $"VALUES ( @JobId, @JobName, @JobDescription, @NextExecutionDate, @Period," +
+                                          $" @ApiUrlForJob, @Params, @UserId, @UserEmail,@PeriodFormat)";
+                    command.Parameters.AddWithValue("@JobId", job.Id);
+                    command.Parameters.AddWithValue("@JobName", job.Name);
+                    command.Parameters.AddWithValue("@JobDescription", job.Description);
+                    command.Parameters.AddWithValue("@NextExecutionDate", job.NextExecutionDate);
+                    command.Parameters.AddWithValue("@Period", job.Period);
+                    command.Parameters.AddWithValue("@ApiUrlForJob", job.ApiUrlForJob);
+                    command.Parameters.AddWithValue("@Params", job.Params);
+                    command.Parameters.AddWithValue("@UserId", job.UserId);
+                    command.Parameters.AddWithValue("@UserEmail", job.UserEmail);
+                    command.Parameters.AddWithValue("@PeriodFormat", job.PeriodFormat);
                     number = command.ExecuteNonQuery();
 
                 }
@@ -83,12 +94,13 @@ namespace TestTask.Data.Repositories
             Job Job = new Job();
             await Task.Run(() =>
             {
-                string sqlExpression = $"SELECT * FROM Job WHERE Id = '{jobId}'";
+                string sqlExpression = $"SELECT * FROM Job WHERE Id = @JobId";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                    command.Parameters.AddWithValue("@JobId", jobId);
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows) 
@@ -162,13 +174,13 @@ namespace TestTask.Data.Repositories
             int number = 0;
             await Task.Run(() =>
             {
-                string sqlExpression = $"DELETE  FROM Job WHERE Id= '{id}'";
+                string sqlExpression = $"DELETE  FROM Job WHERE Id= @JobId";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-
+                    command.Parameters.AddWithValue("@JobId", id);
                     number = command.ExecuteNonQuery();
                 }
             });
@@ -183,14 +195,16 @@ namespace TestTask.Data.Repositories
             int number = 0;
             await Task.Run(() =>
             {
-                string sqlExpression = $"UPDATE Job SET NextExecutionDate = '{job.NextExecutionDate}'," +
-                                       $"LastExecutionDate = '{job.LastExecutionDate}' WHERE Id = '{job.Id}'";
+                string sqlExpression = $"UPDATE Job SET NextExecutionDate = @NextExecutionDate," +
+                                       $"LastExecutionDate = @LastExecutionDate WHERE Id = @JobId";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-
+                    command.Parameters.AddWithValue("@JobId", job.Id);
+                    command.Parameters.AddWithValue("@LastExecutionDate", job.LastExecutionDate);
+                    command.Parameters.AddWithValue("@NextExecutionDate", job.NextExecutionDate);
                     number = command.ExecuteNonQuery();
                 }
             });
@@ -204,14 +218,21 @@ namespace TestTask.Data.Repositories
             int number = 0;
             await Task.Run(() =>
             {
-                string sqlExpression = $"UPDATE Job SET Name='{job.Name}', Description= '{job.Description}', NextExecutionDate = '{job.NextExecutionDate}'," +
-                                       $"Period = '{job.Period}', ApiUrlForJob = '{job.ApiUrlForJob}', Params = '{job.Params}', PeriodFormat = '{job.PeriodFormat}' WHERE Id = '{job.Id}'";
+                string sqlExpression = $"UPDATE Job SET Name= @JobName, Description= @JobDescription, NextExecutionDate = @NextExecutionDate," +
+                                       $"Period = @Period, ApiUrlForJob = @ApiUrlForJob, Params = @Params, PeriodFormat = @PeriodFormat WHERE Id = @JobId";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-
+                    command.Parameters.AddWithValue("@JobId", job.Id);
+                    command.Parameters.AddWithValue("@JobName", job.Name);
+                    command.Parameters.AddWithValue("@JobDescription", job.Description);
+                    command.Parameters.AddWithValue("@NextExecutionDate", job.NextExecutionDate);
+                    command.Parameters.AddWithValue("@Period", job.Period);
+                    command.Parameters.AddWithValue("@ApiUrlForJob", job.ApiUrlForJob);
+                    command.Parameters.AddWithValue("@Params", job.Params);
+                    command.Parameters.AddWithValue("@PeriodFormat", job.PeriodFormat);
                     number = command.ExecuteNonQuery();
                 }
             });

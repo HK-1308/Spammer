@@ -48,12 +48,13 @@ namespace TestTask.Data.Repositories
             bool isAlreadyExist = false;
             await Task.Run(() =>
             {
-                string sqlExpression = $"SELECT * FROM User WHERE Email = '{user.Email}'";
+                string sqlExpression = $"SELECT * FROM User WHERE Email = @UserEmail";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                    command.Parameters.AddWithValue("@UserEmail", user.Email);
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows) 
@@ -75,7 +76,10 @@ namespace TestTask.Data.Repositories
 
                     SqliteCommand command = new SqliteCommand();
                     command.Connection = connection;
-                    command.CommandText = $"INSERT INTO User (Id,Email, Password, RoleId) VALUES ('{id}','{user.Email}', '{user.Password}', '2')";
+                    command.CommandText = $"INSERT INTO User (Id,Email, Password, RoleId) VALUES (@UserId, @UserEmail, @UserPassword, '2')";
+                    command.Parameters.AddWithValue("@UserId", id);
+                    command.Parameters.AddWithValue("@UserEmail", user.Email);
+                    command.Parameters.AddWithValue("@UserPassword", user.Password);
                     number = command.ExecuteNonQuery(); 
                     
                 }
@@ -90,12 +94,13 @@ namespace TestTask.Data.Repositories
             string userId = "";
             await Task.Run(() =>
             {
-                string sqlExpression = $"SELECT Id FROM User WHERE Email = '{email}'";
+                string sqlExpression = $"SELECT Id FROM User WHERE Email = @UserEmail";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                    command.Parameters.AddWithValue("@UserEmail", email);
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows) // если есть данные
@@ -116,17 +121,18 @@ namespace TestTask.Data.Repositories
             string roleId = "";
             await Task.Run(() =>
             {
-                string sqlExpression = $"SELECT RoleID FROM User WHERE Id = '{id}'";
+                string sqlExpression = $"SELECT RoleID FROM User WHERE Id = @UserId";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                    command.Parameters.AddWithValue("@UserId", id);
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
-                        if (reader.HasRows) // если есть данные
+                        if (reader.HasRows)
                         {
-                            while (reader.Read())   // построчно считываем данные
+                            while (reader.Read())
                             {
                                  roleId = reader.GetString(0); 
                             }
@@ -141,12 +147,14 @@ namespace TestTask.Data.Repositories
             User user = null;
             await Task.Run(() =>
             {
-                string sqlExpression = $"SELECT * FROM User WHERE Email = '{email}' AND Password = '{password}'";
+                string sqlExpression = $"SELECT * FROM User WHERE Email = @UserEmail AND Password = @UserPassword";
                 using (var connection = new SqliteConnection("Data Source=Tasks.db"))
                 {
                     connection.Open();
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                    command.Parameters.AddWithValue("@UserEmail", email);
+                    command.Parameters.AddWithValue("@UserPassword", password);
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows) 
